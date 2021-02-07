@@ -1,10 +1,10 @@
-package web.dao;
+package web.service;
 
 import web.model.Role;
 
 import java.util.Set;
 
-public interface RoleDao {
+public interface RoleService {
     Role getByName(String s);
     Set<Role> roleSet();
 }
