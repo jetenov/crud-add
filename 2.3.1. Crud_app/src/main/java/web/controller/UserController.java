@@ -66,9 +66,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String role) {
+    public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String[] role) {
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.getByName(role));
+        for (String r : role) {
+            roles.add(roleService.getByName(r));
+        }
         user.setRoles(roles);
         userService.update(user);
         return "redirect:/admin";
