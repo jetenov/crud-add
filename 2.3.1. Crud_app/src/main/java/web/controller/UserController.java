@@ -1,14 +1,12 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import web.model.Role;
 import web.model.User;
-import web.service.RoleService;
 import web.service.UserService;
 
 import java.util.HashSet;
@@ -18,12 +16,10 @@ import java.util.Set;
 @Controller
 public class UserController {
     private UserService userService;
-    private RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
 
@@ -61,14 +57,16 @@ public class UserController {
     @GetMapping("/admin/edit")
     public String editUser(Model model, @RequestParam(required = false, defaultValue = "1") Long id) {
         model.addAttribute("user", userService.getById(id));
-        model.addAttribute("roles", roleService.roleSet());
+        model.addAttribute("roles", userService.roleSet());
         return "edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String role) {
+    public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String[] role) {
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.getByName(role));
+        for (String r : role) {
+            roles.add(userService.getRoleByName(r));
+        }
         user.setRoles(roles);
         userService.update(user);
         return "redirect:/admin";
