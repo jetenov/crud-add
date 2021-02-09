@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.dao.RoleRepository;
 import web.dao.UserRepository;
@@ -45,11 +46,11 @@ public class UserService implements UserDetailsService {
     }
 
     public void update(User user) {
-        entityManager.merge(user);
+        userRepository.save(user);
     }
 
-    public void delete(User user) {
-        entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 
     public Role getRoleByName(String s) {

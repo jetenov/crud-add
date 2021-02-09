@@ -17,6 +17,7 @@
         <th>password</th>
         <th>roles</th>
         <th>edit</th>
+        <th>delete</th>
     </tr>
     <tr th:each="user, state : ${users}">
         <td th:text="${state.index}">index</td>
@@ -30,6 +31,7 @@
         </td>
         </td>
         <td><a th:href = "@{/admin/edit(id=${user.getId()})}"> edit </a></td>
+        <td><a th:href="@{/delete(id=${user.getId()})}">Delete</a></td>
     </tr>
 </table>
 <br/>

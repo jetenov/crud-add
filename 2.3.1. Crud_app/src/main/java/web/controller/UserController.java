@@ -61,7 +61,7 @@ public class UserController {
         return "edit";
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public String update(@ModelAttribute("user") User user, @RequestParam(required = false) String[] role) {
         Set<Role> roles = new HashSet<>();
         for (String r : role) {
@@ -72,11 +72,10 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@ModelAttribute("user") User user) {
-        userService.delete(user);
+    @GetMapping("/delete")
+    public String delete(@RequestParam(value = "id") Long id) {
+        userService.delete(id);
         return "redirect:/admin";
     }
-
 
 }

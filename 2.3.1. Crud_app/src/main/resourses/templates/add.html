@@ -10,10 +10,10 @@
 <body>
 <p></p>
 <form th:method="POST" th:action="@{/admin}" th:object="${user}">
-    <label for="userName">Enter firstName: </label>
+    <label for="userName">Enter username: </label>
     <input type="text" th:field="*{username}" id="userName"/>
     <br/>
-    <label for="password">Enter lastName: </label>
+    <label for="password">Enter password: </label>
     <input type="text" th:field="*{password}" id="password"/>
     <br/>
     <input type="submit" value="Create!"/>

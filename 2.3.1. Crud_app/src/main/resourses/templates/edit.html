@@ -2,22 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">html lang="en">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Update User</title>
 </head>
 <body>
 <p></p>
-<form th:method="PATCH" th:action="@{/{id}(id = ${user.getId()})}" th:object="${user}">
-    <label for="userName">Enter firstName: </label>
+<form th:method="POST" th:action="@{/{id}(id = ${user.getId()})}" th:object="${user}">
+    <label for="userName">Enter userName: </label>
     <input type="text" th:field="*{username}" id="userName"/>
     <br/>
-    <label for="password">Enter lastName: </label>
+    <label for="password">Enter password: </label>
     <input type="text" th:field="*{password}" id="password"/>
     <br/>
     <label for="role">Enter role: </label>
-    <select name = "role" id = "role" class = "form-control form-control-sm">
+    <select name = "role" id = "role" multiple size="2">
         <option th:each="r: ${roles}"
                 th:value="${r.getName()}"
                 th:text="${r.getName()}">
@@ -25,9 +26,6 @@
     </select>
     <br/>
     <input type="submit" value="Update!"/>
-</form>
-<form th:method="DELETE" th:action="@{/{id}(id=${user.getId()})}">
-    <input type="submit" value="Delete"/>
 </form>
 </body>
 </html>
