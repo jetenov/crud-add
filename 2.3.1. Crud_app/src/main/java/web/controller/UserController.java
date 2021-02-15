@@ -1,6 +1,8 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,28 +24,28 @@ public class UserController {
         this.userService = userService;
     }
 
-
-
     @GetMapping()
-    public String printUsers(ModelMap model) {
-        model.addAttribute("users", userService.UserList());
+    public String printUsers() {
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminUsers(ModelMap model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("userAuth", userService.loadUserByUsername(auth.getName()));
+        model.addAttribute("userNew", new User());
+        model.addAttribute("roles", userService.roleSet());
         model.addAttribute("users", userService.UserList());
         return "admin";
     }
 
-
-    @GetMapping("/admin/add")
-    public String addUser(@ModelAttribute("user") User user) {
-        return "add";
-    }
-
     @PostMapping("/admin")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(@ModelAttribute("user") User user, @RequestParam(required = false) String[] role) {
+        Set<Role> roles = new HashSet<>();
+        for (String r : role) {
+            roles.add(userService.getRoleByName(r));
+        }
+        user.setRoles(roles);
         userService.add(user);
         return "redirect:/admin";
     }
@@ -52,13 +54,6 @@ public class UserController {
     public String showUser(Model model, @RequestParam(required = false, defaultValue = "jetenov") String s) {
         model.addAttribute("user", userService.loadUserByUsername(s));
         return "user";
-    }
-
-    @GetMapping("/admin/edit")
-    public String editUser(Model model, @RequestParam(required = false, defaultValue = "1") Long id) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("roles", userService.roleSet());
-        return "edit";
     }
 
     @PostMapping("/{id}")
