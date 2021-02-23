@@ -41,12 +41,23 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public void add(User user) {
-        userRepository.save(user);
+    public User add(User user) {
+        Set<Role> roles = new HashSet<>();
+        for (Role role: user.getRoles()){
+            roles.add(roleRepository.getByName(role.getName()));
+        }
+        user.setRoles(roles);
+        return userRepository.save(user);
     }
 
-    public void update(User user) {
-        userRepository.save(user);
+    public User update(User user, Long id) {
+        User userToBeUpdated = getById(id);
+        Set<Role> roles = new HashSet<>();
+        for (Role role: user.getRoles()){
+            roles.add(roleRepository.getByName(role.getName()));
+        }
+        userToBeUpdated.setRoles(roles);
+        return userRepository.save(userToBeUpdated);
     }
 
     public void delete(Long id) {
